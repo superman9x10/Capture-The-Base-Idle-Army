@@ -8,6 +8,9 @@ TagManager:
   - UpgradeArea
   - AttackArea
   - Turret
+  - buyArea
+  - Character
+  - trigger
   layers:
   - Default
   - TransparentFX

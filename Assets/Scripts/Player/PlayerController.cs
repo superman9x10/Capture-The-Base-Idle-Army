@@ -4,8 +4,10 @@ using UnityEngine;
 using System;
 public class PlayerController : Character
 {
+    
     public static event Action<float> playerMove;
 
+    [Header("Player Config")]
     [SerializeField] FloatingJoystick joystick;
     [SerializeField] float movementSpeed;
 
@@ -13,7 +15,6 @@ public class PlayerController : Character
 
     private void Update()
     {
-        base.Update();
         movement();
     }
 
