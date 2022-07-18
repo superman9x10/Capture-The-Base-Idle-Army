@@ -63,19 +63,28 @@ public class BuyArea : AreaBase
     }
     IEnumerator ie_transfer()
     {
+
         while (!coinStorage.isFull() && !characterStorage.isEmpty())
         {
-            GameObject item = characterStorage.items[0];
-            item.SetActive(false);
+            GameObject item = characterStorage.items[characterStorage.items.Count - 1];
+
+            item.GetComponent<ItemBase>().holder = coinStorage.transform;
+            item.GetComponent<ItemBase>().targetPos = new Vector3(0
+                , coinStorage.transform.position.y
+                , 0);
+            item.GetComponent<ItemBase>().doMove();
+
             coinStorage.addItem(item);
             characterStorage.removeItem(item);
 
+            numOfCoins = coinStorage.items.Count;
             yield return new WaitForSeconds(0.05f);
-            
+            item.SetActive(false);
         }
-        //isStanding = true;
+        
+        yield return new WaitForSeconds(0.5f);
         canSpawn = true;
-        numOfCoins = coinStorage.items.Count;
+        
     }
 
     void spawn()
@@ -84,24 +93,30 @@ public class BuyArea : AreaBase
         {
             if (delayTime <= 0)
             {
-                BotAI bot = characterToSpawn[upgradeArea.noOfTown].GetComponent<BotAI>();
-                if (spawnPointIdx < spawnPoints.Count && numOfCoins - bot.price >= 0)
+                int botPrice = upgradeArea.levelPrice[upgradeArea.noOfTown];
+
+                if (spawnPointIdx < spawnPoints.Count && numOfCoins - botPrice >= 0)
                 {
                     GameObject character = Instantiate(characterToSpawn[upgradeArea.noOfTown], spawnPos.position, Quaternion.identity);
                     readyAtkStorage.addItem(character);
-                    coinStorage.removeItem(coinStorage.items[0]);
+                    
+                    for(int i = 0; i < botPrice; i++)
+                    {
+                        coinStorage.removeItem(coinStorage.items[0]);
+                    }
+
 
                     character.transform.parent = spawnPoints[spawnPointIdx].transform;
                         
                     character.GetComponent<BotAI>().target = spawnPoints[spawnPointIdx];
 
                     spawnPointIdx++;
-                    numOfCoins--;
+                    //numOfCoins--;
+                    numOfCoins -= upgradeArea.levelPrice[upgradeArea.noOfTown];
                 }
                 else
                 {
                     canSpawn = false;
-                    
                 }
 
                 delayTime = timeToSpawn;
@@ -116,7 +131,7 @@ public class BuyArea : AreaBase
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Character"))
+        if (other.CompareTag("Character") && (int)teamNumb == other.GetComponent<Character>().teamNum)
         {
             isStanding = true;
             characterStorage = other.GetComponent<Character>().coinStorage;

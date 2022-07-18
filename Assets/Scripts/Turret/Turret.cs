@@ -1,17 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using DG.Tweening;
 public class Turret : MonoBehaviour
 {
+    [Header("Turret info")]
     public Storage turretStorage;
     public Storage characterStorage;
     public int HP;
+
+    [Header("Turret")]
     public bool isStanding;
     public float timer;
     public float startActionTime;
 
-    
+    [Header("Land list")]
+    public List<GameObject> listOfLands;
+
+    //public bool isOccupied;
+
+    public Character character;
+    public int ownerTeam;
+    public Material occupiedTeamColor;
+
     private void Awake()
     {
         timer = startActionTime;
@@ -19,12 +30,6 @@ public class Turret : MonoBehaviour
 
     private void Update()
     {
-        //if(!turretStorage.isEmpty())
-        //{
-        //    //HP += (int) turretStorage.items[0].GetComponent<BotConfig>().level + 1;
-        //    //turretStorage.clearItemList();
-        //}
-
         transfeProcess();
     }
 
@@ -60,22 +65,38 @@ public class Turret : MonoBehaviour
             botAI.bot.stoppingDistance = 0;
             botAI.isGoToTurret = true;
             botAI.collider.enabled = true;
-            //item.SetActive(false);
+            
             turretStorage.addItem(bot);
             characterStorage.removeItem(bot);
 
-            //HP += (int)turretStorage.items[0].GetComponent<BotConfig>().level + 1;
-            //turretStorage.clearItemList();
             yield return new WaitForSeconds(0.05f);
+            
+        }
 
+        StartCoroutine("changeColor");
+    }
+
+    IEnumerator changeColor()
+    {
+        //yield return new WaitForSeconds(1f);
+        GetComponent<Renderer>().material.color = occupiedTeamColor.color;
+        for (int i = 0; i < listOfLands.Count; i++)
+        {
+            listOfLands[i].GetComponent<Renderer>().material.DOColor(occupiedTeamColor.color, 1f);
+            yield return new WaitForSeconds(0.05f);
         }
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Character"))
         {
+            
             isStanding = true;
             characterStorage = other.GetComponent<Character>().characterStorage;
+            occupiedTeamColor = other.GetComponent<Character>().teamColor;
+
+            character = other.GetComponent<Character>();
+            
         }
     }
 

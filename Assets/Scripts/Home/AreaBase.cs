@@ -9,10 +9,16 @@ public class AreaBase : MonoBehaviour
     public float startActionTime;
     public bool isStanding;
 
+    public enum Team
+    {
+        team_1,
+        team_2,
+        team_3
+    }
+    public Team teamNumb;
+
     private void Awake()
     {
         timer = startActionTime;
     }
-
-    
 }

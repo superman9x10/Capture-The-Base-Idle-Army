@@ -18,8 +18,18 @@ public class HomeUIManager : MonoBehaviour
     }
     private void Update()
     {
-        upgradeTextUI.text = (upgradeArea.coinStorage.items.Count + "/" + upgradeArea.coinStorage.requireAmount).ToString();
-        buyTextUI.text = (buyArea.coinStorage.items.Count + "/" + buyArea.coinStorage.requireAmount).ToString();
+        buyTextUI.text = (buyArea.numOfCoins + "/" + buyArea.coinStorage.requireAmount).ToString();
+
+        if (!upgradeArea.isMaxLevel)
+        {
+            upgradeTextUI.text = (upgradeArea.coinStorage.items.Count + "/" + upgradeArea.coinStorage.requireAmount).ToString();
+            
+        } else
+        {
+            upgradeTextUI.text = "Max";
+        }
+
+        priceUI.text = "Price: " + upgradeArea.levelPrice[upgradeArea.noOfTown].ToString();
     }
 
 }

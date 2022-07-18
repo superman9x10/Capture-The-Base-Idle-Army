@@ -11,11 +11,13 @@ public class BotAI : MonoBehaviour
 
     public bool isGoToTurret;
     public BoxCollider collider;
-    public int price;
+
+    public int botTeamNum;
     private void Start()
     {
         bot = GetComponent<NavMeshAgent>();
         bot.SetDestination(target.position);
+        
     }
     private void Update()
     {
@@ -38,10 +40,34 @@ public class BotAI : MonoBehaviour
     {
         if(other.CompareTag("trigger") && isGoToTurret)
         {
-            Turret turret = other.GetComponentInParent<Turret>();
-            turret.HP += (int)gameObject.GetComponent<BotConfig>().level + 1;
+
+            turretHPchangeProcess(other);
+
             isGoToTurret = false;
             gameObject.SetActive(false);
+        }
+    }
+
+    void turretHPchangeProcess(Collider other)
+    {
+        Turret turret = other.GetComponentInParent<Turret>();
+
+        if (turret.HP == 0)
+        {
+
+            turret.ownerTeam = turret.character.teamNum;
+            turret.HP += (int)gameObject.GetComponent<BotConfig>().level + 1;
+        }
+        else
+        {
+            if (botTeamNum == turret.ownerTeam)
+            {
+                turret.HP += (int)gameObject.GetComponent<BotConfig>().level + 1;
+            }
+            else
+            {
+                turret.HP -= (int)gameObject.GetComponent<BotConfig>().level + 1;
+            }
         }
     }
 }

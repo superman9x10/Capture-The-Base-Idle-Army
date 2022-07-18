@@ -10,6 +10,7 @@ public class AttackArea : AreaBase
     public Storage teammateStorage;
 
     public BuyArea buyArea;
+    public Character character;
     private void Update()
     {
         botFollowCharacterProcess();
@@ -25,10 +26,11 @@ public class AttackArea : AreaBase
                 {
                     botReadyStorage.items[i].GetComponent<BotAI>().target = target.transform;
                     botReadyStorage.items[i].GetComponent<BotAI>().bot.stoppingDistance = 3;
+                    botReadyStorage.items[i].GetComponent<BotAI>().botTeamNum = character.teamNum;
 
                     teammateStorage.addItem(botReadyStorage.items[i]);
                 }
-                //isStandOnAttackArea = false;
+                
                 botReadyStorage.clearItemList();
 
                 buyArea.spawnPointIdx = 0;
@@ -45,10 +47,11 @@ public class AttackArea : AreaBase
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Character"))
+        if (other.CompareTag("Character") && (int)teamNumb == other.GetComponent<Character>().teamNum)
         {
             isStanding = true;
             target = other.transform;
+            character = other.GetComponent<Character>();
             teammateStorage = other.GetComponent<Character>().characterStorage;
         }
     }

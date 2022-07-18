@@ -10,11 +10,14 @@ public class UpgradeArea : AreaBase
     public int noOfTown;
 
     public bool canUpgrade;
+    public int[] levelPrice;
+    public bool isMaxLevel;
     private void Awake()
     {
         timer = startActionTime;
-        townList[noOfTown].SetActive(true);
+        //townList[noOfTown].SetActive(true);
         canUpgrade = true;
+        
     }
 
     private void Update()
@@ -23,6 +26,7 @@ public class UpgradeArea : AreaBase
         upgradeProcess();
         
     }
+    
     void transfeProcess()
     {
         if (isStanding && noOfTown < townList.Count - 1)
@@ -41,6 +45,11 @@ public class UpgradeArea : AreaBase
             {
                 timer -= Time.deltaTime;
             }
+        }
+
+        if(noOfTown == townList.Count - 1)
+        {
+            isMaxLevel = true;
         }
     }
 
@@ -77,13 +86,21 @@ public class UpgradeArea : AreaBase
     {
         while (!coinStorage.isFull() && !characterStorage.isEmpty())
         {
-            GameObject item = characterStorage.items[0];
-            item.SetActive(false);
+            GameObject item = characterStorage.items[characterStorage.items.Count - 1];
+
+            item.GetComponent<ItemBase>().holder = coinStorage.transform;
+            item.GetComponent<ItemBase>().targetPos = new Vector3(0
+                , coinStorage.transform.position.y
+                , 0);
+            item.GetComponent<ItemBase>().doMove();
+
+
+            
             coinStorage.addItem(item);
             characterStorage.removeItem(item);
             
             yield return new WaitForSeconds(0.1f);
-            
+            item.SetActive(false);
         }
        // isStanding = true;
     }
@@ -91,7 +108,8 @@ public class UpgradeArea : AreaBase
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Character"))
+        
+        if (other.CompareTag("Character") && (int)teamNumb == other.GetComponent<Character>().teamNum)
         {
             isStanding = true;
             characterStorage = other.GetComponent<Character>().coinStorage;
@@ -106,85 +124,4 @@ public class UpgradeArea : AreaBase
             timer = startActionTime;
         }
     }
-
-
-    //Storage storage;
-    //public bool canUpgrade = true;
-    //public List<GameObject> teammate;
-
-
-    //public GameObject spawnPointGroup;
-    //public List<Transform> spawnPoints;
-
-    //public int count;
-
-    //public AttackArea attackArea;
-    //public List<GameObject> townList;
-    //public int noOfTown;
-
-    //private void Awake()
-    //{
-    //    townList[noOfTown].SetActive(true);
-    //}
-    //private void Start()
-    //{
-    //    storage = GetComponentInChildren<Storage>();
-
-    //    float count = spawnPointGroup.transform.childCount;
-    //    for(int i = 0; i < count; i++)
-    //    {
-    //        spawnPoints.Add(spawnPointGroup.transform.GetChild(i));
-    //    }
-    //}
-
-    //private void Update()
-    //{
-
-    //    if(storage.isFull() && canUpgrade)
-    //    {
-    //        canUpgrade = false;
-    //        //Debug.Log("test");
-
-    //        StartCoroutine("upgradeProcess");
-
-    //    }
-
-    //    //spawn();
-
-    //}
-
-    ////void spawn()
-    ////{
-    ////    if(canSpawn)
-    ////    {
-    ////        if (timer <= 0)
-    ////        {
-    ////            if (count < spawnPoints.Count && itemNumb > 0)
-    ////            {
-    ////                GameObject character = Instantiate(teammate[noOfTown], transform.position, Quaternion.identity);
-    ////                attackArea.attackStorage.addItem(character);
-    ////                character.transform.parent = spawnPoints[count].transform;
-    ////                //character.transform.DOMove(spawnPoints[count].position, 1f);
-    ////                character.GetComponent<BotAI>().target = spawnPoints[count];
-    ////                count++;
-    ////                itemNumb--;
-    ////            }
-    ////            else
-    ////            {
-
-    ////                canSpawn = false;
-    ////            }
-
-    ////            timer = timeToSpawn;
-    ////        }
-    ////        else
-    ////        {
-    ////            timer -= Time.deltaTime;
-    ////        }
-    ////    }
-
-    ////}
-
-
-
 }
