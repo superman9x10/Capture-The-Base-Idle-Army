@@ -707,7 +707,7 @@ GameObject:
   - component: {fileID: 1222943009531715875}
   m_Layer: 0
   m_Name: Tower Mage
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -937,6 +937,35 @@ MonoBehaviour:
   isStanding: 0
   timer: 0
   startActionTime: 1.5
+  listOfLands:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  character: {fileID: 0}
+  ownerTeam: 0
+  occupiedTeamColor: {fileID: 0}
 --- !u!65 &444528805
 BoxCollider:
   m_ObjectHideFlags: 0

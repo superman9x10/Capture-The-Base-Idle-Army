@@ -54,9 +54,10 @@ public class BotAI : MonoBehaviour
 
         if (turret.HP == 0)
         {
-
             turret.ownerTeam = turret.character.teamNum;
             turret.HP += (int)gameObject.GetComponent<BotConfig>().level + 1;
+            //Debug.Log("Change color");
+            //StartCoroutine(turret.changeColor());
         }
         else
         {

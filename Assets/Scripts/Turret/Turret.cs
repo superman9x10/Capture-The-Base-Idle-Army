@@ -56,6 +56,11 @@ public class Turret : MonoBehaviour
 
     IEnumerator ie_transfer()
     {
+        //if (HP == 0)
+        //{
+        //    StartCoroutine("changeColor");
+        //}
+
         while (!turretStorage.isFull() && !characterStorage.isEmpty())
         {
             GameObject bot = characterStorage.items[0];
@@ -73,10 +78,11 @@ public class Turret : MonoBehaviour
             
         }
 
+        
         StartCoroutine("changeColor");
     }
 
-    IEnumerator changeColor()
+    public IEnumerator changeColor()
     {
         //yield return new WaitForSeconds(1f);
         GetComponent<Renderer>().material.color = occupiedTeamColor.color;

@@ -15,7 +15,6 @@ public class UpgradeArea : AreaBase
     private void Awake()
     {
         timer = startActionTime;
-        //townList[noOfTown].SetActive(true);
         canUpgrade = true;
         
     }
